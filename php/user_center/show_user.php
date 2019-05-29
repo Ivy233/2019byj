@@ -1,4 +1,14 @@
 <?php
+function object_to_array($obj) {
+    $obj = (array)$obj;
+    foreach ($obj as $k => $v) {
+        if (gettype($v) == 'resource')
+            return;
+        if (gettype($v) == 'object' || gettype($v) == 'array')
+            $obj[$k] = (array)object_to_array($v);
+    }
+    return $obj;
+}
 if(isset($_POST['userid'])&&intval($_POST['userid']))
 {
     require_once("../function/db_mysqli.php");
@@ -6,7 +16,7 @@ if(isset($_POST['userid'])&&intval($_POST['userid']))
     $db=new DB();
 
     $user=$db->getRow("select * from user where id='".$_POST['userid']."'");
-    $loan_history=get_all_loan_history($user['stuid']);
+    $loan_history=object_to_array(get_all_loan_history($user['stuid']));
     $visit_detail=visit_detail($user['stuid']);
     $len=strlen($user['stuid']);
     $stunum="";
@@ -20,6 +30,20 @@ if(isset($_POST['userid'])&&intval($_POST['userid']))
         "most_branch_name"=>$visit_detail['most-branch-name'],
         "visit_count"=>$visit_detail['visit-count']
     ];
+    array_push($loan_history, array(
+        "booktitle"=>"小布情书",
+        "author"=>"武汉大学图书馆",
+        "callno"=>"none",
+        "bookisbn"=>"none",
+        "loandate"=>"20190603"
+    ));
+    usort($loan_history, function($a, $b) {
+        $al = intval($a['loandate']);
+        $bl = intval($b['loandate']);
+        if ($al == $bl)
+            return 0;
+        return ($al > $bl) ? -1 : 1;
+    });
     $res_user=array(
         "name"=>$user['name'],
         "stuId"=>$user['stuid'],
