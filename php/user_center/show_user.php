@@ -14,6 +14,12 @@ if(isset($_POST['userid'])&&intval($_POST['userid']))
         if($i<5||$i==$len-1)$stunum.=$user['stuid'][$i];
         else $stunum.="*";
     }
+    $res_visit_detail=[
+        "first_visit_time"=>$visit_detail['fist-visit-time'],
+        "most_branch_count"=>$visit_detail['most-branch-count'],
+        "most_branch_name"=>$visit_detail['most-branch-name'],
+        "visit_count"=>$visit_detail['visit-count']
+    ];
     $res_user=array(
         "name"=>$user['name'],
         "stuId"=>$user['stuid'],
@@ -23,7 +29,7 @@ if(isset($_POST['userid'])&&intval($_POST['userid']))
         "address"=>$user['address'],
         "tel"=>$user['tel'],
         "loan_history"=>$loan_history,
-        "visit_detail"=>$visit_detail
+        "visit_detail"=>$res_visit_detail
     );
     echo json_encode($res_user);
 }
