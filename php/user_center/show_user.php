@@ -22,8 +22,8 @@ if(isset($_POST['userid'])&&intval($_POST['userid']))
         "show_stunum"=>$stunum,
         "address"=>$user['address'],
         "tel"=>$user['tel'],
-        "loan-history"=>$loan_history,
-        "visit-detail"=>$visit_detail
+        "loan_history"=>$loan_history,
+        "visit_detail"=>$visit_detail
     );
     echo json_encode($res_user);
 }
